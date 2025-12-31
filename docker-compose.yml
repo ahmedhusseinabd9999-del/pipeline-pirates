@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  # الباك إند (FastAPI)
+  backend:
+    build: ./app
+    ports:
+      - "8000:8000"
+    networks:
+      - pirate-net
+
+  # الفرونت إند (Nginx)
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - pirate-net
+
+networks:
+  pirate-net:
+    driver: bridge

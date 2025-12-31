@@ -1,0 +1,14 @@
+# بناء الباك إند
+    - name: Build and push Backend
+      uses: docker/build-push-action@v3
+      with:
+        context: ./app
+        push: true
+        tags: ahmedhusseinabdelkader/pipeline-backend:v2
+
+    - name: Build and push Frontend
+      uses: docker/build-push-action@v3
+      with:
+        context: ./frontend
+        push: true
+        tags: your-docker-username/pipeline-frontend:v2
