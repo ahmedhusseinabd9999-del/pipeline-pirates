@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pipeline-pirates
+  namespace: dev
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pipeline-pirates
+  template:
+    metadata:
+      labels:
+        app: pipeline-pirates
+    spec:
+      containers:
+      - name: pipeline-pirates
+        image: ahmedhusseinabdelkader/pipeline-pirates:dev
+        ports:
+        - containerPort: 80

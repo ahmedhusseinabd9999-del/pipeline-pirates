@@ -1,0 +1,31 @@
+name: CI/CD Pipeline
+on: [push, pull_request]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with: {python-version: '3.11'}
+      
+      # 1. Linting (flake8/ruff)
+      - run: pip install ruff && ruff check .
+      
+      # 2. Testing & Coverage (Acceptance Criterion #1)
+      - run: |
+          pip install pytest pytest-cov fastapi uvicorn
+          pytest --cov=app tests/
+
+      # 3. Security Scan (Trivy - Acceptance Criterion #2)
+      - name: Build image for scan
+        run: docker build -t pipeline-pirates:test .
+      - name: Trivy Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'pipeline-pirates:test'
+          format: 'table'
+          exit-code: '1' # هيفشل الـ CI لو فيه Critical vulns
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
