@@ -12,6 +12,15 @@ image:
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "v2"
+db:
+  secretName: pipeline-pirates-db-secret
+redis:
+  url: "redis://localhost:6379"
+backend:
+  name: pipeline-pirates-backend
+
+frontend:
+  name: pipeline-pirates-frontend
 
 # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []

@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = 'http://pipeline-pirates-backend:8000';
 const TOKEN_KEY = 'auth_token';
 const USER_KEY = 'user_data';
 

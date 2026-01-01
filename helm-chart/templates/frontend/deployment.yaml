@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.frontend.name | default (include "pipeline-pirates.fullname" .) }}
+  labels:
+    app: {{ .Values.frontend.name | default (include "pipeline-pirates.fullname" .) }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.frontend.name | default (include "pipeline-pirates.fullname" .) }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.frontend.name | default (include "pipeline-pirates.fullname" .) }}
+    spec:
+      containers:
+        - name: frontend
+          image: nginx:alpine
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: frontend-content
+              mountPath: /usr/share/nginx/html
+      volumes:
+        - name: frontend-content
+          configMap:
+            name: {{ include "pipeline-pirates.fullname" . }}-frontend-config

@@ -11,4 +11,4 @@
       with:
         context: ./frontend
         push: true
-        tags: your-docker-username/pipeline-frontend:v2
+        tags: ahmedhusseinabdelkader/pipeline-frontend:v2

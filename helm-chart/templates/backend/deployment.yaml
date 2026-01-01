@@ -1,13 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "pipeline-pirates.fullname" . }}
+  name: {{ .Values.backend.name | default (include "pipeline-pirates.fullname" .) }}
   labels:
     {{- include "pipeline-pirates.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
       {{- include "pipeline-pirates.selectorLabels" . | nindent 6 }}
@@ -20,25 +18,26 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          
-          # الجزء اللي بيشغل الـ Sign-in/Sign-up ويربطهم بالداتابيز
+
+          # --- Env variables ---
           env:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.db.secretName }}
+                  name: {{ default "pipeline-pirates-db-secret" .Values.db.secretName }}
                   key: url
             - name: REDIS_URL
               value: {{ .Values.redis.url | quote }}
             - name: ENV
               value: "production"
 
+          # --- Ports ---
           ports:
             - name: http
               containerPort: 8000
               protocol: TCP
 
-          # التأكد إن الأبلكيشن شغال قبل ما يبعتله Traffic
+          # --- Probes ---
           livenessProbe:
             httpGet:
               path: /health
@@ -48,6 +47,6 @@ spec:
               path: /health
               port: http
 
-          # تحديد الموارد (مهم جداً للـ SRE/Ops)
+          # --- Resources ---
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
