@@ -15,7 +15,8 @@ jobs:
       
       # 2. Testing & Coverage (Acceptance Criterion #1)
       - run: |
-          pip install pytest pytest-cov fastapi uvicorn
+          python -m pip install --upgrade pip
+          pip install pytest pytest-cov fastapi uvicorn httpx
           pytest --cov=app tests/
 
       # 3. Security Scan (Trivy - Acceptance Criterion #2)
