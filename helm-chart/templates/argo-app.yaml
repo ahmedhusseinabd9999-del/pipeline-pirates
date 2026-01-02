@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pipeline-pirates
+spec:
+  destination:
+    namespace: {{ .Release.Namespace }}
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: pipeline-pirates
+    repoURL: {{ .Values.helmRepo }}
+    targetRevision: {{ .Values.image.tag }}
+    helm:
+      values: |
+        backend:
+          image:
+            tag: {{ .Values.image.tag }}
+        frontend:
+          image:
+            tag: {{ .Values.image.tag }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

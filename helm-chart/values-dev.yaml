@@ -1,0 +1,28 @@
+ibackend:
+  replicaCount: 2
+  image:
+    repository: ahmedhusseinabdelkader/pipeline-backend
+    tag: latest
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 80
+
+frontend:
+  replicaCount: 2
+  image:
+    repository: ahmedhusseinabdelkader/pipeline-frontend
+    tag: latest
+
+monitoring:
+  enabled: true
+  prometheus:
+    scrapeInterval: 30s
